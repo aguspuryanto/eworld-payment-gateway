@@ -2,10 +2,6 @@
 require_once 'vendor/autoload.php';
 
 use PaymentGateway\PaymentProcessor;
-use PaymentGateway\Gateways\CreditCard;
-use PaymentGateway\Gateways\CashOnDelivery;
-use PaymentGateway\Gateways\BankTransfer;
-use PaymentGateway\Gateways\PayPal;
 
 $processor = new PaymentProcessor();
 

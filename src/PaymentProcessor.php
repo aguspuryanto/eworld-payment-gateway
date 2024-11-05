@@ -21,6 +21,10 @@ class PaymentProcessor
     {
         // Membaca konfigurasi umum dari config.php
         $this->config = require 'config.php';
+
+        if(isset($this->config['baseUrl'])) {
+            $this->baseUrl = $this->config['baseUrl'];
+        }
     }
 
     public function setGatewayByPayflowOrder(int $payflow, int $order)
