@@ -10,45 +10,44 @@ use PaymentGateway\Gateways\PayPal;
 $processor = new PaymentProcessor();
 
 try {
-    // Set Gateway berdasarkan payflow dan order
-    // echo $processor->setGatewayByPayflowOrder(1, 13); // Akan memilih FPX untuk Malaysia
+
+    /*
+     * Skenario untuk MY - CCD
+     * Payflow: 1
+     * Order: 1
+     * Gateway: CreditCard
+     */
+
+    // Set Gateway yang akan digunakan, berdasarkan payflow dan order
+    echo $processor->setGatewayByPayflowOrder(1, 1);
 
     // Set Gateway yang akan digunakan
     // $processor->setGateway('CreditCard');
 
-    // Memproses pembayaran
-    // echo $processor->processPayment(100.0);
-
     // Proses pembayaran dengan parameter dinamis
-    // echo $processor->processPayment(100.0, [
-    //     'invoice_no' => 'INV123456',
-    //     'code' => 'CC01',
-    //     'lang' => 'EN',
-    //     'buyer_email' => 'buyer@example.com',
-    //     'buyer_fullname' => 'John Doe',
-    //     'buyer_address' => '123 Main Street',
-    //     'buyer_state' => 'Selangor',
-    //     'buyer_city' => 'Shah Alam',
-    //     'bank_url' => 'https://bank.example.com/creditcard',
-    //     'return_url' => 'https://yourapp.com/payment/success',
-    //     'fail_url' => 'https://yourapp.com/payment/fail',
-    //     'cancel_url' => 'https://yourapp.com/payment/cancel',
-    //     'notify_url' => 'https://yourapp.com/payment/notify',
-    // ]);
+    $params = [
+        'mb_edisc_amt' => 100,
+        'mb_invno' => '2404230019',
+        'mb_code' => '826278698',
+        'mb_shipcnt' => 'MY',
+        'mb_cctype' => 'VISA'
+    ];
 
-    // MY - CCD
-    // echo $processor->setGatewayByPayflowOrder(1, 1);
+    // Save into database, network.payment_redirection
+    // $payRe = new paymentRedirection();
+    // $payRe->memcode = $mb_code;
+    // $payRe->trcd = $mb_invno;
+    // $payRe->payment_method = $mb_order;
+    // $payRe->response_url = $return_url;
+    // $payRe->goto_url = $go_url;
+    // $payRe->bank_url = $bank_url;
+    // $payRe->reff_code = $xrandom;
+    // $payRe->amount = $mb_edisc_amt;
+    // $payRe->param = $params;
+    // $payRe->country = $mb_shipcnt;
+    // $payRe->cctype = $mb_cctype;
 
-    // Set Gateway yang akan digunakan
-    $processor->setGateway('CreditCard');
-
-    // Proses pembayaran dengan parameter dinamis
-    $jsonResponse = $processor->processPayment(100.0, [
-        'invoice_no' => 'INV123456',
-        'code' => 'CC01',
-        'buyer_country_id' => 'MY',
-        'buyer_cctype' => 'VISA',
-    ]);
+    $jsonResponse = $processor->processPayment($params['mb_edisc_amt'], $params);
 
     // Output JSON response
     echo $jsonResponse;

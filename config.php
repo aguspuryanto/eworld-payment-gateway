@@ -92,39 +92,19 @@
     */
 
 return [
+    'baseUrl' => 'https://ew-dev.dxn2u.com/ajax-api/',
     'payflows' => [
         1 => [ // Malaysia
             'country' => 'Malaysia',
             'orders' => [
-                1 => [
-                    'gateway' => 'CreditCard',   // CCD
-                    'bank_url' => 'https://bank.malaysia/ccd',
-                    'return_url' => 'https://yourapp.com/payment/success',
-                    'fail_url' => 'https://yourapp.com/payment/fail',
-                    'cancel_url' => 'https://yourapp.com/payment/cancel',
-                    'notify_url' => 'https://yourapp.com/payment/notify',
-                ],
-                9 => [
-                    'gateway' => 'CIMBClicks',   // CLK
-                    'bank_url' => 'https://cimbclicks.malaysia.com',
-                    'return_url' => 'https://yourapp.com/payment/success',
-                    'fail_url' => 'https://yourapp.com/payment/fail',
-                    'cancel_url' => 'https://yourapp.com/payment/cancel',
-                    'notify_url' => 'https://yourapp.com/payment/notify',
-                ],
-                13 => [
-                    'gateway' => 'FPX',          // FPX
-                    'bank_url' => 'https://fpx.malaysia.com',
-                    'return_url' => 'https://yourapp.com/payment/success',
-                    'fail_url' => 'https://yourapp.com/payment/fail',
-                    'cancel_url' => 'https://yourapp.com/payment/cancel',
-                    'notify_url' => 'https://yourapp.com/payment/notify',
-                ],
+                1 => 'CreditCard',        // CCD
                 3 => 'CashOnDelivery',    // CSH
                 4 => 'BankTransfer',      // BTR
                 5 => 'PayPal',            // PPL
                 6 => 'Epoint',            // EWL
                 8 => 'B2C',               // B2C
+                9 => 'CIMBClicks',        // CLK
+                13 => 'FPX',              // FPX
             ],
         ],
         2 => [ // Gulf - UAE
@@ -178,6 +158,13 @@ return [
                 6 => 'Epoint',            // EWL
             ],
         ],
+        33 => [ // Philippines
+            'country' => 'Philippines',
+            'orders' => [
+                45 => 'MPGS',             // MPGS
+                48 => 'GCash',            // GCash
+            ]
+        ],
         35 => [ // South Africa
             'country' => 'South Africa',
             'orders' => [
@@ -196,6 +183,4 @@ return [
         'account_number' => 'YOUR_BANK_ACCOUNT',
         'swift_code' => 'YOUR_SWIFT_CODE',
     ],
-    'api_key' => 'YOUR_API_KEY_HERE',  // API Key untuk beberapa gateway, jika diperlukan
-    'default_notify_url' => 'https://yourapp.com/payment/notify',
 ];

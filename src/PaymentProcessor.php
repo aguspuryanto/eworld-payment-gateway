@@ -3,6 +3,8 @@ namespace PaymentGateway;
 
 use PaymentGateway\Gateways\CreditCard;
 use PaymentGateway\Gateways\BankTransfer;
+use PaymentGateway\Gateways\Epoint;
+use PaymentGateway\Gateways\MPGS;
 use PaymentGateway\Gateways\PayPal;
 
 class PaymentProcessor
@@ -10,6 +12,10 @@ class PaymentProcessor
     private $gateway;
     private $config;
     private $paymentParams;
+    private $baseUrl = 'https://ew-dev.dxn2u.com/ajax-api/';
+
+    private $mb_payflow;
+    private $mb_order;
 
     public function __construct()
     {
@@ -19,24 +25,17 @@ class PaymentProcessor
 
     public function setGatewayByPayflowOrder(int $payflow, int $order)
     {
+        $this->mb_payflow = $payflow;
+        $this->mb_order = $order;
+
         // Memeriksa apakah payflow dan order valid dalam konfigurasi
         if (isset($this->config['payflows'][$payflow])) {
             $payflowConfig = $this->config['payflows'][$payflow];
             
             if (isset($payflowConfig['orders'][$order])) {
-                $orderConfig = $payflowConfig['orders'][$order];
                 $gatewayName = $payflowConfig['orders'][$order];
 
                 $this->setGateway($gatewayName);
-                
-                // Menyimpan parameter pembayaran tambahan
-                $this->paymentParams = [
-                    'bank_url' => $orderConfig['bank_url'],
-                    'return_url' => $orderConfig['return_url'],
-                    'fail_url' => $orderConfig['fail_url'],
-                    'cancel_url' => $orderConfig['cancel_url'],
-                    'notify_url' => $orderConfig['notify_url'],
-                ];
             } else {
                 throw new \Exception("Order tidak ditemukan untuk payflow: $payflow");
             }
@@ -45,7 +44,7 @@ class PaymentProcessor
         }
     }
 
-    public function setGateway($gatewayName)
+    public function setGateway($gatewayName, $opt = [])
     {
         // Menentukan gateway berdasarkan nama
         switch ($gatewayName) {
@@ -58,6 +57,12 @@ class PaymentProcessor
             case 'PayPal':
                 $this->gateway = new PayPal();
                 break;
+            case 'Epoint':
+                $this->gateway = new Epoint();
+                break;
+            case 'MPGS':
+                $this->gateway = new MPGS($opt);
+                break;
             default:
                 throw new \Exception("Gateway tidak dikenal: $gatewayName");
         }
@@ -69,27 +74,15 @@ class PaymentProcessor
             throw new \Exception("Payment gateway belum diatur.");
         }
 
-        // Menentukan nilai default base_url
-        $baseUrl = $this->config['base_url'] ?? 'https://defaulturl.com/';
-
-        // Menyusun parameter ke dalam query string
-        $queryParams = [
-            'invNo' => $params['invoice_no'] ?? '',
-            'amt' => $amount,
-            'memcode' => $params['code'] ?? '',
-            'cn_id' => $params['buyer_country_id'] ?? '',
-            'cctype' => $params['buyer_cctype'] ?? '',
-        ];
-
         // Membuat reference number acak
-        $xrandom = rand(100000, 999999);
+        $xrandom = $params['mb_invno'] . $this->RandomString(64);
 
         //MY 
-        if ($mb_payflow == 1) {
+        if ($this->mb_payflow == 1) {
             // MY - CCD
-            if ($mb_order == 1) {
+            if ($this->mb_order == 1) {
                 // Menggabungkan query string dan URL
-                $turl = $baseUrl . "payment/PBB/pbb_go.php?" . http_build_query($queryParams) . "&payref=$xrandom";
+                $turl = $this->baseUrl . "payment/PBB/pbb_go.php?payref=$xrandom";
             }
         }
 
@@ -99,17 +92,25 @@ class PaymentProcessor
         // Menentukan status sukses atau gagal dan pesan yang sesuai
         $success = $paymentResponse['success'] ?? false;
         $msg = $paymentResponse['message'] ?? 'Payment processing failed';
-        $url = $paymentResponse['data_url'] ?? '';
+        // $url = $paymentResponse['data_url'] ?? '';
 
         // Susun hasil JSON
+        // $return = '{"success":' . $success . ', "msg":"' . $msg . '", "reff":"' . $xrandom . '", "data":"' . $url . '", "turl":"' . $turl . '"}';
+
         $return = json_encode([
             "success" => $success,
             "msg" => $msg,
             "reff" => $xrandom,
-            "data" => $url,
+            "data" => $turl,
             "turl" => $turl
         ]);
 
         return $return;
+    }
+
+    public function RandomString($length) {
+        $original_string = implode("", array_merge(range(0, 9), range('a', 'z'), range('A', 'Z')));
+
+        return substr(str_shuffle($original_string), 0, $length);
     }
 }
