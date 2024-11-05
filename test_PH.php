@@ -21,7 +21,7 @@ try {
      */
 
     // Set Gateway yang akan digunakan, berdasarkan payflow dan order
-    // echo $processor->setGatewayByPayflowOrder(33, 45);
+    echo $processor->setGatewayByPayflowOrder(33, 45);
 
     $config = require 'config.php';
     $baseUrl = $config['baseUrl'];
@@ -39,10 +39,11 @@ try {
     $myArray['notificationUrl'] = $baseUrl . "payment/MPGS/return_notify.php";
     $myArray['redirectMerchantUrl'] = $baseUrl . "payment/MPGS/return_redirect.php";
     $myArray['cancelUrl'] = $baseUrl . "payment/MPGS/return_cancel.php";
-
+    
     $params = [
         'currency' => 'PHP',
         'amount' => $myArray['amount'],
+        'mb_invno' => $myArray['invno'],
         'invno' => $myArray['invno'],
         'successUrl' => $myArray['successUrl'],
         'cancelUrl' => $myArray['cancelUrl']."?invoice=".$myArray['invno'],
@@ -53,9 +54,9 @@ try {
 
     // for Visa
     // device.ipAddress, device.browserDetails.screenWidth, device.browserDetails.screenHeight
-    // $params['email'] = $myArray['buyerEmail'];
-    // $params['firstName'] = $myArray['buyerName'];
-    // $params['lastName'] = $myArray['buyerName'];
+    $params['email'] = '8Hk7x@example.com';
+    $params['firstName'] = 'John';
+    $params['lastName'] = 'Doe';
 
     // Save into database, network.payment_redirection
     // $payRe = new paymentRedirection();

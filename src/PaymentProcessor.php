@@ -77,12 +77,19 @@ class PaymentProcessor
         // Membuat reference number acak
         $xrandom = $params['mb_invno'] . $this->RandomString(64);
 
-        //MY 
+        // MY 
         if ($this->mb_payflow == 1) {
             // MY - CCD
             if ($this->mb_order == 1) {
-                // Menggabungkan query string dan URL
                 $turl = $this->baseUrl . "payment/PBB/pbb_go.php?payref=$xrandom";
+            }
+        }
+
+        // PH
+        if ($this->mb_payflow == 33) {
+            // PH - MPGS
+            if ($this->mb_order == 45) {
+                $turl = $this->baseUrl . "payment/MPGS/go_mpgs.php?ref=$xrandom";
             }
         }
 
