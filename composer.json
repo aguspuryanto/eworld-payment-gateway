@@ -1,0 +1,20 @@
+{
+    "name": "aguspuryanto/eworld-payment-gateway",
+    "description": "A PHP package for multiple payment gateways supporting Credit Card, COD, Bank Transfer, and PayPal.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "PaymentGateway\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Agus Puryanto",
+            "email": "aguspuryanto@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    }
+}
