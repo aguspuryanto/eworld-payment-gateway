@@ -82,23 +82,3 @@ try {
         "turl" => null
     ]);
 }
-
-// Contoh pemakaian dengan metode Credit Card
-// $creditCardGateway = new CreditCard();
-// $processor = new PaymentProcessor($creditCardGateway);
-// echo $processor->processPayment(100.0); // Output: Payment of 100 via Credit Card processed.
-
-// Contoh pemakaian dengan metode Cash On Delivery
-// $cashOnDeliveryGateway = new CashOnDelivery();
-// $processor = new PaymentProcessor($cashOnDeliveryGateway);
-// echo $processor->processPayment(50.0); // Output: Payment of 50 via Cash on Delivery processed.
-
-// Contoh pemakaian dengan metode Bank Transfer
-// $bankTransferGateway = new BankTransfer();
-// $processor = new PaymentProcessor($bankTransferGateway);
-// echo $processor->processPayment(250.0); // Output: Payment of 250 via Bank Transfer processed.
-
-// Contoh pemakaian dengan metode PayPal
-// $paypalGateway = new PayPal();
-// $processor = new PaymentProcessor($paypalGateway);
-// echo $processor->processPayment(300.0); // Output: Payment of 300 via PayPal processed.

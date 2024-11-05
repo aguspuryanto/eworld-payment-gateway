@@ -106,15 +106,20 @@ class PaymentProcessor
         // $url = $paymentResponse['data_url'] ?? '';
 
         // Susun hasil JSON
-        // $return = '{"success":' . $success . ', "msg":"' . $msg . '", "reff":"' . $xrandom . '", "data":"' . $url . '", "turl":"' . $turl . '"}';
-
-        $return = json_encode([
+        $result = [
             "success" => $success,
             "msg" => $msg,
             "reff" => $xrandom,
-            "data" => $turl,
+            "data" => $params,
             "turl" => $turl
-        ]);
+        ];
+
+        if ($this->mb_payflow == 33 && $this->mb_order == 45) {
+            $sessionId = $paymentResponse['sessionId'] ?? '';
+            $result['sessionId'] = $sessionId;
+        }
+
+        $return = json_encode($result);
 
         return $return;
     }
